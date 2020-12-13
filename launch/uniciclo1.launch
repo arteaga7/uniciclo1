@@ -1,0 +1,25 @@
+<launch>
+<!-- Definicion de variables -->
+  <arg name="model1" default="waffle"/>
+  <arg name="x_pos1" default="0.0"/>
+  <arg name="y_pos1" default="0.0"/>
+  <arg name="z_pos1" default="0.0"/>
+  <arg name="yaw1"   default="0.0"/>
+
+<!-- Inicia Gazebo con un mundo vacio -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+<!-- Converte el archivo xacro y lo pone en el servidor de parametros -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model1).urdf.xacro" />
+
+<!-- Engendra un robot en Gazebo, tomando la descripcion del servidor de parametros -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model1) -x $(arg x_pos1) -y $(arg y_pos1) -z $(arg z_pos1) -Y $(arg yaw1) -param robot_description" />
+
+</launch>
